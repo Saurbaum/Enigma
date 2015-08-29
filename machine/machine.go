@@ -5,18 +5,25 @@ import (
 	"github.com/saurbaum/enigma/rotor"
 )
 
-var rotors []rotor.Rotor
+type Configuration struct {
+	Rotors []rotor.Rotor
+}
+
+var config Configuration
 
 func Run() {
-	fmt.Printf("Starting Machine with %d rotors\n", len(rotors))
+	fmt.Printf("Starting Machine with %d rotors\n", len(config.Rotors))
 
-	for _, r := range rotors {
-		fmt.Println(r.GetPosition())
+	var character byte
+	var nextStep = false
+	for _, r := range config.Rotors {
+		character, nextStep = r.Translate('A', nextStep)
+		fmt.Printf("%s", string(character))
+		character, nextStep = r.Translate('B', nextStep)
+		fmt.Printf("%s", string(character))
 	}
 }
 
-func Initialise(wheelCount int) {
-	for i := 0; i < wheelCount; i++ {
-		rotors = append(rotors, rotor.Create(i))
-	}
+func Initialise(newConfig Configuration) {
+	config = newConfig
 }
