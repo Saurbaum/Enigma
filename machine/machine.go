@@ -6,21 +6,27 @@ import (
 )
 
 type Configuration struct {
-	Rotors []rotor.Rotor
+	Rotors    []rotor.Rotor
+	Reflector rotor.Rotor
 }
 
 var config Configuration
 
-func Run() {
+func Run(input string) {
 	fmt.Printf("Starting Machine with %d rotors\n", len(config.Rotors))
 
-	var character byte
-	var nextStep = false
-	for _, r := range config.Rotors {
-		character, nextStep = r.Translate('A', nextStep)
-		fmt.Printf("%s", string(character))
-		character, nextStep = r.Translate('B', nextStep)
-		fmt.Printf("%s", string(character))
+	for _, c := range input {
+		var character byte = byte(c)
+
+		fmt.Printf("Transforming %s\n", string(character))
+
+		var nextStep bool = true
+		for index := 0; index < len(config.Rotors); index++ {
+			character, nextStep = config.Rotors[index].Translate(character, nextStep)
+			fmt.Printf("Rotor %d translate to %s\n", index, string(character))
+
+			index = index + 1
+		}
 	}
 }
 

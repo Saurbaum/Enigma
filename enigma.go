@@ -10,7 +10,7 @@ func main() {
 
 	rotors = append(rotors, rotor.CreateI(0))
 
-	var config = machine.Configuration{rotors}
+	var config = machine.Configuration{rotors, rotor.CreateReflectorB(0)}
 	machine.Initialise(config)
-	machine.Run()
+	machine.Run("TEST")
 }

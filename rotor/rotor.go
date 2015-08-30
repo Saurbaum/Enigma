@@ -7,55 +7,63 @@ type Rotor struct {
 	ringSetting int
 
 	position int
+
+	static bool
 }
 
-var RotorI = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-var RotorII = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
-var RotorIII = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
-var RotorIV = "ESOVPZJAYQUIRHXLNFTGKDCMWB"
-var RotorV = "VZBRGITYUPSDNHLXAWMJQOFECK"
-var RotorVI = "JPGVOUMFYQBENHZRDKASXLICTW"
-var RotorVII = "NZJHGRCXMYSWBOUFAIVLPEKQDT"
-var RotorVIII = "FKQHTLXOCBJSPDZRAMEWNIUYGV"
+var rotorI = "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
+var rotorII = "AJDKSIRUXBLHWTMCQGZNPYFVOE"
+var rotorIII = "BDFHJLCPRTXVZNYEIWGAKMUSQO"
+var rotorIV = "ESOVPZJAYQUIRHXLNFTGKDCMWB"
+var rotorV = "VZBRGITYUPSDNHLXAWMJQOFECK"
+var rotorVI = "JPGVOUMFYQBENHZRDKASXLICTW"
+var rotorVII = "NZJHGRCXMYSWBOUFAIVLPEKQDT"
+var rotorVIII = "FKQHTLXOCBJSPDZRAMEWNIUYGV"
+
+var reflectorB = "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+
+func createRotor(tableData string, firstStepPos byte, secondStepPos byte, ringSettingPos int, pos int) Rotor {
+	return Rotor{table: tableData, stepFirst: firstStepPos, stepSecond: secondStepPos, ringSetting: ringSettingPos, position: pos, static: false}
+}
+
+func createReflector(tableData string, pos int) Rotor {
+	return Rotor{table: tableData, position: pos, static: true}
+}
 
 func CreateI(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'Q', 0, ringSetting, 0}
-	return rotor
+	return createRotor(rotorI, 'Q', 0, ringSetting, 0)
 }
 
 func CreateII(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'E', 0, ringSetting, 0}
-	return rotor
+	return createRotor(rotorII, 'E', 0, ringSetting, 0)
 }
 
 func CreateIII(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'V', 0, ringSetting, 0}
-	return rotor
+	return createRotor(rotorIII, 'V', 0, ringSetting, 0)
 }
 
 func CreateIV(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'J', 0, ringSetting, 0}
-	return rotor
+	return createRotor(rotorIV, 'J', 0, ringSetting, 0)
 }
 
 func CreateV(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'Z', 0, ringSetting, 0}
-	return rotor
+	return createRotor(rotorV, 'Z', 0, ringSetting, 0)
 }
 
 func CreateVI(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'Z', 'M', ringSetting, 0}
-	return rotor
+	return createRotor(rotorVI, 'Z', 'M', ringSetting, 0)
 }
 
 func CreateVII(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'Z', 'M', ringSetting, 0}
-	return rotor
+	return createRotor(rotorVII, 'Z', 'M', ringSetting, 0)
 }
 
 func CreateVIII(ringSetting int) Rotor {
-	rotor := Rotor{RotorI, 'Z', 'M', ringSetting, 0}
-	return rotor
+	return createRotor(rotorVIII, 'Z', 'M', ringSetting, 0)
+}
+
+func CreateReflectorB(position int) Rotor {
+	return createReflector(reflectorB, position)
 }
 
 func (r Rotor) GetPosition() int {
@@ -70,14 +78,15 @@ func (r Rotor) testStep(stepPoint byte) bool {
 	return false
 }
 
-func (r Rotor) Translate(input byte, step bool) (byte, bool) {
+func (r *Rotor) Translate(input byte, step bool) (byte, bool) {
 	var pushStep = false
 
-	if step {
-		if r.testStep(r.stepFirst) || r.testStep(r.stepSecond) {
-			pushStep = true
-		}
+	if step && !r.static {
 		r.position++
+	}
+
+	if r.testStep(r.stepFirst) || r.testStep(r.stepSecond) {
+		pushStep = true
 	}
 
 	var convertIndex = int(input-'A') + r.position
