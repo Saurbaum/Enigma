@@ -93,7 +93,19 @@ func (r *Rotor) Translate(input byte, step bool) (byte, bool) {
 
 	convertIndex = convertIndex % len(r.table)
 
-	var character = byte(r.table[convertIndex])
+	var character = byte(byte(r.table[convertIndex]) - byte(r.position)%byte(len(r.table)))
 
 	return character, pushStep
+}
+
+func (r Rotor) ReverseTranslate(input byte) byte {
+	input = ((input-'A')+byte(r.position))%byte(len(r.table)) + 'A'
+
+	for index := 0; index < len(r.table); index++ {
+		if byte(r.table[index]) == input {
+			return 'A' + byte((index-r.position)%len(r.table))
+		}
+	}
+
+	return 0
 }
