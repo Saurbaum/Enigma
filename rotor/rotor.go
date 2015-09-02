@@ -26,8 +26,8 @@ func createRotor(tableData string, firstStepPos byte, secondStepPos byte, ringSe
 	return Rotor{table: tableData, stepFirst: firstStepPos, stepSecond: secondStepPos, ringSetting: ringSettingPos, position: pos, static: false}
 }
 
-func createReflector(tableData string, pos int) Rotor {
-	return Rotor{table: tableData, position: pos, static: true}
+func createReflector(tableData string) Rotor {
+	return Rotor{table: tableData, static: true}
 }
 
 func CreateI(ringSetting int) Rotor {
@@ -62,8 +62,8 @@ func CreateVIII(ringSetting int) Rotor {
 	return createRotor(rotorVIII, 'Z', 'M', ringSetting, 0)
 }
 
-func CreateReflectorB(position int) Rotor {
-	return createReflector(reflectorB, position)
+func CreateReflectorB() Rotor {
+	return createReflector(reflectorB)
 }
 
 func (r Rotor) GetPosition() int {
